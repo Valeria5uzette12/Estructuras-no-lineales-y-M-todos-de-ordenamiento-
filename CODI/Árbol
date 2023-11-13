@@ -1,0 +1,93 @@
+class NodoArbol:
+    def __init__(self, valor):
+        self.valor = valor
+        self.izquierda = None
+        self.derecha = None
+
+class ArbolBinario:
+    def __init__(self):
+        self.raiz = None
+
+    def insertar(self, valor):
+        if self.raiz is None:
+            self.raiz = NodoArbol(valor)
+        else:
+            self._insertar(self.raiz, valor)
+
+    def _insertar(self, nodo, valor):
+        if valor < nodo.valor:
+            if nodo.izquierda is None:
+                nodo.izquierda = NodoArbol(valor)
+            else:
+                self._insertar(nodo.izquierda, valor)
+        elif valor > nodo.valor:
+            if nodo.derecha is None:
+                nodo.derecha = NodoArbol(valor)
+            else:
+                self._insertar(nodo.derecha, valor)
+
+    def buscar(self, valor):
+        return self._buscar(self.raiz, valor)
+
+    def _buscar(self, nodo, valor):
+        if nodo is None:
+            return False
+        elif valor == nodo.valor:
+            return True
+        elif valor < nodo.valor:
+            return self._buscar(nodo.izquierda, valor)
+        else:
+            return self._buscar(nodo.derecha, valor)
+
+    def eliminar(self, valor):
+        if self.raiz is None:
+            return None, False
+        if self.raiz.valor != valor:
+            self.raiz, _ = self._eliminar_recursivo(self.raiz, valor)
+            return self.raiz, True
+        return None, False
+
+    def _eliminar_recursivo(self, nodo, valor):
+        if nodo is None:
+            return None, False
+        if valor == nodo.valor:
+            if nodo.izquierda is None:
+                return nodo.derecha, True
+            elif nodo.derecha is None:
+                return nodo.izquierda, True
+            else:
+                sucesor, _ = self._encontrar_sucesor(nodo.derecha)
+                nodo.valor = sucesor.valor
+                nodo.derecha, _ = self._eliminar(nodo.derecha, sucesor.valor)
+                return nodo, True
+        elif valor < nodo.valor:
+            nodo.izquierda, eliminado = self._eliminar_recursivo(nodo.izquierda, valor)
+            return nodo, eliminado
+        else:
+            nodo.derecha, eliminado = self._eliminar_recursivo(nodo.derecha, valor)
+            return nodo, eliminado
+
+    def _encontrar_sucesor(self, nodo):
+        while nodo.izquierda is not None:
+            nodo = nodo.izquierda
+        return nodo, True
+
+
+# Ejemplo de uso:
+arbol = ArbolBinario()
+arbol.insertar(5)
+arbol.insertar(3)
+arbol.insertar(7)
+print(arbol.buscar(3))  # True
+print(arbol.buscar(8))  # False
+arbol.eliminar(5)
+print(arbol.buscar(5))  # False
+Ejemplo 1:
+Arbol = ArbolBinario()
+Arbol.insertar(5)
+Arbol.insertar(3)
+Arbol.insertar(7)
+
+Print(arbol.buscar(3))  # True
+Print(arbol.buscar(8))  # False
+
